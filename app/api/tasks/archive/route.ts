@@ -6,9 +6,7 @@ const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export async function POST() {
   try {
-    const archivedCount = await convex.mutation(api.tasks.archiveCompletedTasks, {
-      olderThanHours: 24
-    });
+    const archivedCount = await convex.mutation(api.tasks.archiveCompletedTasks, {});
     
     console.log(`Cron job: Archived ${archivedCount} tasks`);
     
