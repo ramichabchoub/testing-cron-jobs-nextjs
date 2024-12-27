@@ -6,19 +6,25 @@ const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export async function POST() {
   try {
-    // Archive tasks completed more than 24 hours ago
     const archivedCount = await convex.mutation(api.tasks.archiveCompletedTasks, {
       olderThanHours: 24
     });
-
+    
+    console.log(`Cron job: Archived ${archivedCount} tasks`);
+    
     return NextResponse.json({ 
       success: true, 
-      message: `Archived ${archivedCount} tasks` 
+      message: `Archived ${archivedCount} tasks`,
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error("Error archiving tasks:", error);
+    console.error('Cron job error:', error);
     return NextResponse.json(
-      { success: false, error: "Failed to archive tasks" },
+      { 
+        success: false, 
+        error: "Failed to archive tasks",
+        timestamp: new Date().toISOString()
+      },
       { status: 500 }
     );
   }

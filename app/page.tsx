@@ -22,7 +22,7 @@ export default function Home() {
 
   const handleManualArchive = async () => {
     try {
-      const archivedCount = await archiveTasks({});
+      const archivedCount = await archiveTasks({ olderThanHours: 24 });
       setArchiveMessage(`Successfully archived ${archivedCount} completed tasks`);
       
       setTimeout(() => {

@@ -42,13 +42,16 @@ export const toggleComplete = mutation({
 });
 
 export const archiveCompletedTasks = mutation({
-  args: {},
-  handler: async (ctx) => {
+  args: { olderThanHours: v.number() },
+  handler: async (ctx, args) => {
+    const cutoffTime = Date.now() - (args.olderThanHours * 60 * 60 * 1000);
+    
     const tasksToArchive = await ctx.db
       .query("tasks")
       .filter(q => 
         q.and(
           q.eq(q.field("isCompleted"), true),
+          q.lt(q.field("completedAt"), cutoffTime),
           q.or(
             q.eq(q.field("isArchived"), false),
             q.eq(q.field("isArchived"), undefined)
