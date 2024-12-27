@@ -25,7 +25,7 @@ export default function Home() {
     try {
       setIsArchiving(true);
       const archivedCount = await archiveTasks({});
-      setArchiveMessage(`Successfully archived ${archivedCount} completed tasks`);
+      setArchiveMessage(`Successfully removed ${archivedCount} completed tasks`);
       
       setTimeout(() => {
         setArchiveMessage("");
@@ -64,14 +64,14 @@ export default function Home() {
             className={`rounded px-4 py-2 text-white ${
               isArchiving 
                 ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-gray-500 hover:bg-gray-600'
+                : 'bg-red-500 hover:bg-red-600'
             }`}
           >
-            {isArchiving ? 'Archiving...' : 'Archive Old Tasks'}
+            {isArchiving ? 'Removing...' : 'Remove Completed Tasks'}
           </button>
           {archiveMessage && (
             <div className="text-sm text-green-600">
-              {archiveMessage}
+              {archiveMessage.replace('archived', 'removed')}
             </div>
           )}
         </div>
