@@ -7,6 +7,6 @@ export default defineSchema({
     isCompleted: v.boolean(),
     createdAt: v.number(),
     completedAt: v.union(v.number(), v.null()),
-    isArchived: v.boolean(),
+    isArchived: v.optional(v.boolean()),
   }).index("by_archived", ["isArchived"]),
 }); 

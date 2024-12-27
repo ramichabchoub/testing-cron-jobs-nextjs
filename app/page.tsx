@@ -9,9 +9,11 @@ export default function Home() {
   const deleteTask = useMutation(api.tasks.remove);
   const toggleTask = useMutation(api.tasks.toggleComplete);
   const archiveTasks = useMutation(api.tasks.archiveCompletedTasks);
+  const migrateTasks = useMutation(api.tasks.migrateIsArchived);
   const [newTaskText, setNewTaskText] = useState("");
   const [archiveMessage, setArchiveMessage] = useState<string>("");
   const [isArchiving, setIsArchiving] = useState(false);
+  const [isMigrating, setIsMigrating] = useState(false);
 
   const handleAddTask = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +37,18 @@ export default function Home() {
       setArchiveMessage("Failed to archive tasks");
     } finally {
       setIsArchiving(false);
+    }
+  };
+
+  const handleMigration = async () => {
+    try {
+      setIsMigrating(true);
+      const count = await migrateTasks();
+      console.log(`Migrated ${count} tasks`);
+    } catch (error) {
+      console.error("Migration error:", error);
+    } finally {
+      setIsMigrating(false);
     }
   };
 
@@ -69,6 +83,19 @@ export default function Home() {
           >
             {isArchiving ? 'Archiving...' : 'Archive Old Tasks'}
           </button>
+          
+          <button
+            onClick={handleMigration}
+            disabled={isMigrating}
+            className={`rounded px-4 py-2 text-white ${
+              isMigrating 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-blue-500 hover:bg-blue-600'
+            }`}
+          >
+            {isMigrating ? 'Migrating...' : 'Migrate Tasks'}
+          </button>
+          
           {archiveMessage && (
             <div className="text-sm text-green-600">
               {archiveMessage}
