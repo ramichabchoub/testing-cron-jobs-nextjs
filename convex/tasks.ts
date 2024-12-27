@@ -6,6 +6,12 @@ export const get = query({
   handler: async (ctx) => {
     return await ctx.db
       .query("tasks")
+      .filter(q => 
+        q.or(
+          q.eq(q.field("isArchived"), false),
+          q.eq(q.field("isArchived"), undefined)
+        )
+      )
       .order("desc")
       .collect();
   },
@@ -19,6 +25,7 @@ export const add = mutation({
       isCompleted: false,
       createdAt: Date.now(),
       completedAt: null,
+      isArchived: false,
     });
     return task;
   },

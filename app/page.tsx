@@ -11,6 +11,7 @@ export default function Home() {
   const archiveTasks = useMutation(api.tasks.archiveCompletedTasks);
   const [newTaskText, setNewTaskText] = useState("");
   const [archiveMessage, setArchiveMessage] = useState<string>("");
+  const [isArchiving, setIsArchiving] = useState(false);
 
   const handleAddTask = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +23,7 @@ export default function Home() {
 
   const handleManualArchive = async () => {
     try {
+      setIsArchiving(true);
       const archivedCount = await archiveTasks({ olderThanHours: 24 });
       setArchiveMessage(`Successfully archived ${archivedCount} completed tasks`);
       
@@ -31,6 +33,8 @@ export default function Home() {
     } catch (error) {
       console.error("Error archiving tasks:", error);
       setArchiveMessage("Failed to archive tasks");
+    } finally {
+      setIsArchiving(false);
     }
   };
 
@@ -56,9 +60,14 @@ export default function Home() {
         <div className="mb-4 flex flex-col gap-2">
           <button
             onClick={handleManualArchive}
-            className="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
+            disabled={isArchiving}
+            className={`rounded px-4 py-2 text-white ${
+              isArchiving 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-gray-500 hover:bg-gray-600'
+            }`}
           >
-            Archive Old Tasks
+            {isArchiving ? 'Archiving...' : 'Archive Old Tasks'}
           </button>
           {archiveMessage && (
             <div className="text-sm text-green-600">
