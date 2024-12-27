@@ -13,6 +13,4 @@ jobs:
     steps:
       - name: Archive completed tasks
         run: |
-          curl -X POST ${{ secrets.VERCEL_URL }}/api/tasks/archive
-        env:
-          VERCEL_URL: ${{ secrets.VERCEL_URL }}
+          curl -X POST https://testing-cron-jobs-nextjs.vercel.app/api/tasks/archive
