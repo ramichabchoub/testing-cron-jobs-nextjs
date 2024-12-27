@@ -75,22 +75,4 @@ export const archiveCompletedTasks = mutation({
     
     return tasksToArchive.length;
   },
-});
-
-export const migrateIsArchived = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const tasks = await ctx.db
-      .query("tasks")
-      .filter(q => q.eq(q.field("isArchived"), undefined))
-      .collect();
-
-    for (const task of tasks) {
-      await ctx.db.patch(task._id, { 
-        isArchived: false 
-      });
-    }
-    
-    return tasks.length;
-  },
 }); 
